@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url  = env("DATABASE_URL")
+}
+
+model User {
+  id                Int        @id @default(autoincrement())
+  uid               String     @unique @default(uuid())
+  name              String?    @db.VarChar(255)
+  createdDt         DateTime   @default(now()) @map("created_dt")
+  updatedDt         DateTime   @updatedAt @map("updated_dt")
+  email             String     @unique @map("email") @db.VarChar(255)
+  password          String?    @unique
+  isVerified        Boolean    @default(false)
+  verificationInfo  Verification?
+  lastLogin         DateTime   @default(now()) @map("last_login")
+  @@map("user")
+}
+
+
+model Verification {
+  id           Int       @id @default(autoincrement())
+  userId       Int       @unique
+  otp          String    
+  expiration   DateTime
+  user         User      @relation(fields: [userId], references: [id])
+  @@map("verification")
+}
+
+
+model Foods {
+  id          Int        @id @default(autoincrement())
+  uid         String     @unique @default(uuid())
+  name        String?    @db.VarChar(255)
+  createdDt   DateTime   @default(now()) @map("created_dt")
+  updatedDt   DateTime   @updatedAt @map("updated_dt")
+  type        String     @db.VarChar(255)
+  
+  @@map("food")
+}
+
