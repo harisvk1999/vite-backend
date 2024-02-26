@@ -13,7 +13,6 @@ exports.findUserByUid = exports.findUserByEmail = void 0;
 const client_1 = require("@prisma/client");
 const userRepo = new client_1.PrismaClient().user;
 const findUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(userRepo, "hiiiiii");
     return yield userRepo.findUnique({
         where: {
             email: email,

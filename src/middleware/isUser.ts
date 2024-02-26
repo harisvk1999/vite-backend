@@ -6,6 +6,8 @@ import { errorHandler } from "./handler/handler";
 const isUser = async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
 
+  console.log(authorization, "authorization");
+
   try {
     if (!authorization) {
       throw new Error("your not authorized");

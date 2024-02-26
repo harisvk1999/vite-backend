@@ -1,14 +1,14 @@
-const AWS = require("aws-sdk");
+import AWS from "aws-sdk";
 
-AWS.config.update({
-  region: "us-east-2",
+AWS.config.credentials = {
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_KEY,
-});
+};
+AWS.config.region = "ap-south-1";
 
-const ses = new AWS.SES({ apiVersion: "2010-12-01" });
+const ses = new AWS.SES();
 
-const sendVerificationEmail = async (
+export const sendVerificationEmail = async (
   toEmail: string,
   verificationCode: string
 ) => {
@@ -26,12 +26,15 @@ const sendVerificationEmail = async (
         Data: "Email Verification - Your OTP",
       },
     },
-    Source: "your-ses-verified-email@example.com",
+    Source: "harisvkvvnr@gmail.com",
   };
 
   try {
+    console.log(ses, "hiii ses");
+
     const result = await ses.sendEmail(params).promise();
-    console.log("Email sent:", result.MessageId);
+    console.log("Email sent:", result, "resultttt");
+    return result;
   } catch (error) {
     console.error("Error sending email:", error);
     throw error;

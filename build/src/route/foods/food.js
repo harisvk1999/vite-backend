@@ -4,9 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const isUser_1 = __importDefault(require("../../middleware/isUser"));
-const list_foods_1 = __importDefault(require("../../controller/auth/foods/list-foods"));
+const getHistory_1 = require("../../controller/history/getHistory");
+const place_order_1 = require("../../controller/placeOrder/place-order");
+const get_item_1 = require("../../controller/food/get-item");
 const foodRouter = (0, express_1.default)();
-foodRouter.get("/list-foods", isUser_1.default, list_foods_1.default);
+foodRouter.post("/palace-order", place_order_1.placeOrder);
+foodRouter.get("/get-history", getHistory_1.getHistory);
+foodRouter.get("/get-all-items", get_item_1.GetItem);
 exports.default = foodRouter;
 //# sourceMappingURL=food.js.map

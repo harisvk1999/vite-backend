@@ -14,6 +14,7 @@ const common_1 = require("../common");
 const handler_1 = require("./handler/handler");
 const isUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { authorization } = req.headers;
+    console.log(authorization, "authorization");
     try {
         if (!authorization) {
             throw new Error("your not authorized");

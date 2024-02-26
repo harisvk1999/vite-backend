@@ -5,6 +5,7 @@ import { findUserByEmail } from "../../common";
 import bcryptjs from "bcryptjs";
 import { RegisterUserInput } from "../../types";
 import { NextFunction, Request, Response } from "express-serve-static-core";
+import { sendVerificationEmail } from "../../utils/aws";
 
 interface IBody {
   email: string;
@@ -59,11 +60,11 @@ const Register = async (req: Request, res: Response, next: NextFunction) => {
 
       const otpExpiration = new Date(Date.now() + 5 * 60 * 1000);
 
-      await storeVerificationInfo(email, verifiCationCode, otpExpiration);
+      await handleFirstRegister({ email, name, hashPassword });
 
       await sendVerificationEmail(email, verifiCationCode);
 
-      await handleFirstRegister({ email, name, hashPassword });
+      await storeVerificationInfo(email, verifiCationCode, otpExpiration);
     }
 
     return res.json({ message: "user added sucessfully" });
@@ -96,6 +97,12 @@ const storeVerificationInfo = async (
   otp: string,
   expiration: Date
 ) => {
+  const user = await findUserByEmail(email);
+
+  if (!user) {
+    return console.error("user is not enterd to register table");
+  }
+
   // Create a new verification record
   await verificationRepo.create({
     data: {

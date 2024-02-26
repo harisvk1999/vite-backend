@@ -3,6 +3,7 @@ import { NextFunction, Response, Request } from "express";
 import { updateVerificationInfo } from "./register";
 import { findUserByEmail } from "../../common";
 import { validationResult } from "express-validator";
+import { sendVerificationEmail } from "../../utils/aws";
 
 const ResendVerification = async (
   req: Request,

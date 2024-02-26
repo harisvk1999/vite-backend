@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { generateOtp, isvalidEmail, updateVerificationInfo } from "./register";
 import { findUserByEmail } from "../../common";
 import { validationResult } from "express-validator";
+import { sendVerificationEmail } from "../../utils/aws";
 
 const SendResetPasswordCode = async (
   req: Request,
@@ -25,9 +26,9 @@ const SendResetPasswordCode = async (
       return next({ status: 422, message: "Please enter valid email address" });
     }
 
-    const user = findUserByEmail(email);
+    const user = await findUserByEmail(email);
 
-    if (!user || !(await user).isVerified) {
+    if (!user || !user.isVerified) {
       return next({
         status: 422,
         message: "this email is not register please register first",

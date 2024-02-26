@@ -13,7 +13,9 @@ const verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
   if (!error.isEmpty()) {
     return next({ status: 422, message: "Please enter valid inputs" });
   }
-  const { email, verificationCode } = req.body;
+  const { email, verificationCode } = req.body as any;
+
+  console.log(req.body, "hiiiii body");
 
   try {
     const verificationInfo = await verificationRepo.findFirst({
