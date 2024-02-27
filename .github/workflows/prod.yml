@@ -1,0 +1,47 @@
+name: production
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          npm install
+          npm run build
+
+      - name: Zip the files
+        run: |
+          zip -r app.zip build/ package.json
+
+      - name: Copy zip file to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_DEV }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "app.zip"
+          target: "/tmp/app.zip"
+
+      - name: SSH into EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST_DEV }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo rm -rf ~/app
+            sudo apt-get install unzip -y
+            unzip /tmp/app.zip/app.zip -d /home/ubuntu/vite-backend
+            bash -e ~/app/start.sh

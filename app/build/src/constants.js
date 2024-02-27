@@ -9,24 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findUserByUid = exports.findUserByEmail = void 0;
-const client_1 = require("@prisma/client");
-const userRepo = new client_1.PrismaClient().user;
-console.log(userRepo);
-const findUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield userRepo.findUnique({
-        where: {
-            email: email,
-        },
-    });
+exports.isValidPassword = void 0;
+const isValidPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{8,}$/;
+    return passwordRegex.test(password);
 });
-exports.findUserByEmail = findUserByEmail;
-const findUserByUid = (uid) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield userRepo.findFirst({
-        where: {
-            uid,
-        },
-    });
-});
-exports.findUserByUid = findUserByUid;
-//# sourceMappingURL=common.js.map
+exports.isValidPassword = isValidPassword;
+//# sourceMappingURL=constants.js.map
